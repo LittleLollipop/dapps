@@ -21,8 +21,8 @@ contract MTDelegate is ManagerContract, Delegate {
 		
 	mapping(address => uint256) contracts;		
 
-	function updateContract(address contract_address, uint256 permission) public restricted {
-		contracts[contract_address] = permission;
+	function updateContract(address contract_address, uint256 _permission) public restricted {
+		contracts[contract_address] = _permission;
 	}
 
 	function permissionOf(address contract_address) constant returns (uint256 permission) {
