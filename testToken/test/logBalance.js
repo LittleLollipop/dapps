@@ -12,7 +12,7 @@ module.exports = function(callback) {
 	var account9 = "0xEE5bBe5348E6995d6eCAfC51f69e939C5446D657";
 	var account10 = "0x615962aEc1c4C104Ee3d100de3c56B3E40491BDb"; 
 
-	TestCoin.at("0x9514d37789ab2C9D700525b687086dA07F274D1f").then(function(instance){
+	TestCoin.at("0x0656b144b1b94bc354d1f52afa912904790ec627").then(function(instance){
 
     	instance.balanceOf.call(account1).then(function(balance){
 		 console.log(balance.toString());

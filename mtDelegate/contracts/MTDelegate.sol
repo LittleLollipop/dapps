@@ -2,7 +2,7 @@ pragma solidity ^0.4.23;
 
 
 import "./ManagerContract.sol";
-
+import "./Logger.sol";
 
 contract ERC20 {
     function balanceOf(address who)view public returns (uint256);
@@ -13,53 +13,107 @@ contract ERC20 {
 }
 
 contract Delegate {
-	function callTransfer(address contract_address, address from, address to, uint256 value) public returns (bool);
-	function multisend(address _tokenAddr, address[] dests, uint256[] values) public;
+  function callTransfer(address contract_address, address from, address to, uint256 value) public returns (bool);
+  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public;
+  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public;
 }
 
-contract MTDelegate is ManagerContract, Delegate {
-		
-	mapping(address => uint256) contracts;		
+contract MTDelegate is ManagerContract, Delegate, Logger {
+    
+  mapping(address => uint256) contracts;    
 
-	function updateContract(address contract_address, uint256 _permission) public restricted {
-		contracts[contract_address] = _permission;
-	}
+  function updateContract(address contract_address, uint256 _permission) public restricted {
+    contracts[contract_address] = _permission;
+  }
 
-	function permissionOf(address contract_address) constant returns (uint256 permission) {
+  function permissionOf(address contract_address) constant returns (uint256 permission) {
     return contracts[contract_address];
   }
 
   function checkPermission (address contract_address, uint256 _value) returns(bool res) {
-  	return contracts[contract_address] >= _value && _value >= 0;
+    return contracts[contract_address] >= _value && _value >= 0;
   }
-  	
+    
   function callTransfer(address contract_address,address from,address to,uint256 value) public returns(bool){
 
     bool result = false;
+    uint state;
     if(checkPermission(msg.sender, value)){
-		  ERC20 token = ERC20(contract_address);
+      state = 2;
+      log("callTransfer state", state);
+
+      ERC20 token = ERC20(contract_address);
       result = token.transferFrom(from, to, value);
+
+      log("transferFrom state", result);
+    }else{
+      state = 1;
+      log("callTransfer state", state);
     }
 
     return result;
   }
 
-  function multisend(address _tokenAddr, address[] dests, uint256[] values) public {
+  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public {
 
     uint256 maxValue = 0;
+    uint state; 
 
-    for(uint v = values.length; v >= 0; v--){
+    log("multisend token", _tokenAddr);
+    log("multisend dests", dests.length);
+    log("multisend values", values.length);
+    for(uint v = 0; v < values.length; v++){
       if(maxValue < values[v]){
         maxValue = values[v];
       }
     }
 
-  	if(checkPermission(msg.sender, maxValue)){
-  		ERC20 token = ERC20(_tokenAddr);
-     		for (uint i = 0; i < dests.length; ++i){
-        	require(token.transferFrom(msg.sender, dests[i], values[i]));
-       	}
-  		}
+    if(checkPermission(msg.sender, maxValue)){
+      state = 2;
+      log("multisend state", state);
+
+      ERC20 token = ERC20(_tokenAddr);
+
+      for (uint i = 0; i < dests.length; i++){
+        require(token.transfer(dests[i], values[i]));
+      }
+      
+    }else{
+
+      state = 1;
+      log("multisend state", state);
+    }
+  }
+
+  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public {
+
+    uint256 maxValue = 0;
+    uint state; 
+
+    log("multisend token", _tokenAddr);
+    log("multisend from", from);
+    log("multisend dests", dests.length);
+    log("multisend values", values.length);
+    for(uint v = 0; v < values.length; v++){
+      if(maxValue < values[v]){
+        maxValue = values[v];
+      }
     }
 
+    if(checkPermission(msg.sender, maxValue)){
+      state = 2;
+      log("multisend state", state);
+
+      ERC20 token = ERC20(_tokenAddr);
+
+      for (uint i = 0; i < dests.length; i++){
+        require(token.transferFrom(from, dests[i], values[i]));
+      }
+      
+    }else{
+
+      state = 1;
+      log("multisend state", state);
+    }
+  }
 }

@@ -12,7 +12,7 @@ module.exports = function(callback) {
 	var account9 = "0xEE5bBe5348E6995d6eCAfC51f69e939C5446D657";
 	var account10 = "0x615962aEc1c4C104Ee3d100de3c56B3E40491BDb"; 
 
-	TestCoin.at("0xe5220d366eb04a4df050023ea6c8515f6347c344").then(function(instance) {
+	TestCoin.at("0x0656b144b1b94bc354d1f52afa912904790ec627").then(function(instance) {
 
 		
     	instance.transfer( account2, (1 * 1000000000000000000) * 10000, {from: account1}).then(function(tx_id){
@@ -41,6 +41,9 @@ module.exports = function(callback) {
 		 });
     	});
 		
+		// instance.transfer( "0xcce11faf7a42a166270e335b4eee876183a38bae", (1 * 1000000000000000000) * 1000000, {from: account1}).then(function(tx_id){
+		// 	console.log(tx_id);
+		// });
 			
 	});
 }

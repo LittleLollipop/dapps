@@ -1,7 +1,7 @@
 
 module.exports = function(callback) {
 
-	var gameNumber = 0;
+	// var gameNumber = 0;
 	var odam = artifacts.require("./odam.sol");
 	var account1 = "0xc1AC4c791c0745debE5Fafe8766d7F540fa876C6"; 
 	var account2 = "0xbbb74d6612266E5D2463Fcc2A1874e1A37BF4Ee2";
@@ -14,38 +14,40 @@ module.exports = function(callback) {
 	var account9 = "0xEE5bBe5348E6995d6eCAfC51f69e939C5446D657";
 	var account10 = "0x615962aEc1c4C104Ee3d100de3c56B3E40491BDb"; 
 
-	odam.at("0x3eb466d64f484cde6d7af18f701a20954296ccef").then(function(instance){
+	odam.at("0x9514d37789ab2c9d700525b687086da07f274d1f").then(function(instance){
 
 		instance.joinGameNow({from:account1}).then(function(res){
-			console.log(res.logs[0].args);
-			// instance.joinGameNow( {from:account2}).then(function(res){
-			// 	console.log(res);
-			// 	instance.joinGameNow( {from:account3}).then(function(res){
-			// 		console.log(res);
-			// 		instance.joinGameNow( {from:account4}).then(function(res){
-			// 			console.log(res);
-			// 			instance.joinGameNow( {from:account5}).then(function(res){
-			// 				console.log(res);
-			// 				instance.joinGameNow( {from:account6}).then(function(res){
-			// 					console.log(res);
-			// 					instance.joinGameNow( {from:account7}).then(function(res){
-			// 						console.log(res);
-			// 						instance.joinGameNow( {from:account8}).then(function(res){
-			// 							console.log(res);
-			// 							instance.joinGameNow( {from:account9}).then(function(res){
-			// 								console.log(res);
-			// 								instance.joinGameNow( {from:account10}).then(function(res){
-			// 									console.log(res);
-			// 								});
-			// 							});
-			// 						});
-			// 					});
-			// 				});
-			// 			});
-			// 		});
-			// 	});
-			// });
-		});
+			console.log(JSON.stringify(res));
+			instance.joinGameNow( {from:account2}).then(function(res){
+				console.log(JSON.stringify(res));
+				instance.joinGameNow( {from:account3}).then(function(res){
+					console.log(JSON.stringify(res));
+					instance.joinGameNow( {from:account4}).then(function(res){
+						console.log(JSON.stringify(res));
+						instance.joinGameNow( {from:account5}).then(function(res){
+							console.log(JSON.stringify(res));
+							instance.joinGameNow( {from:account6}).then(function(res){
+								console.log(JSON.stringify(res));
+								instance.joinGameNow( {from:account7}).then(function(res){
+									console.log(JSON.stringify(res));
+									instance.joinGameNow( {from:account8}).then(function(res){
+										console.log(JSON.stringify(res));
+										instance.joinGameNow( {from:account9}).then(function(res){
+											console.log(JSON.stringify(res));
+											instance.joinGameNow( {from:account10}).then(function(res){
+												console.log(JSON.stringify(res));
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+			});
+		}).catch(function(e) {
+  			console.log(e);
+		});;
 	})
 
 }

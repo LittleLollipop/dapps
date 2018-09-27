@@ -1,7 +1,7 @@
 
 module.exports = function(callback) {
 
-	var delegate = "0xb6D3Dd4Dea55deCe97B32A4eFd64AeED7187aD5F";
+	var delegate = "0x68fade61a964b242e218c1485de6bd78e1d5c56c";
 	var TestCoin = artifacts.require("./TestCoin.sol");
 	var account1 = "0xc1AC4c791c0745debE5Fafe8766d7F540fa876C6"; 
 	var account2 = "0xbbb74d6612266E5D2463Fcc2A1874e1A37BF4Ee2";
@@ -14,7 +14,7 @@ module.exports = function(callback) {
 	var account9 = "0xEE5bBe5348E6995d6eCAfC51f69e939C5446D657";
 	var account10 = "0x615962aEc1c4C104Ee3d100de3c56B3E40491BDb"; 
 
-	TestCoin.at("0x9514d37789ab2C9D700525b687086dA07F274D1f").then(function(instance){
+	TestCoin.at("0x0656b144b1b94bc354d1f52afa912904790ec627").then(function(instance){
 
     	instance.approve(delegate, 10000 ** 18, {from: account1}).then(function(tx_id){
 		 instance.approve(delegate, 10000 ** 18, {from: account2}).then(function(tx_id){
@@ -25,7 +25,8 @@ module.exports = function(callback) {
     	 	  instance.approve(delegate, 10000 ** 18, {from: account7}).then(function(tx_id){
     	 	   instance.approve(delegate, 10000 ** 18, {from: account8}).then(function(tx_id){
     	 	  	instance.approve(delegate, 10000 ** 18, {from: account9}).then(function(tx_id){
-    	 	  	 instance.approve(delegate, 10000 ** 18, {from: account10});
+    	 	  	 instance.approve(delegate, 10000 ** 18, {from: account10}).then(function(tx_id){
+    	 	     });
     	 	    });
     	 	   });
     	 	  });
