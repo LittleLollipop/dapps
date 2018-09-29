@@ -21,5 +21,11 @@ module.exports = {
       port: 7545,
       network_id: "*"
     }
+
+    // rinkeby: {
+    // 	host: "https://rinkeby.infura.io/JZsXxwSuoh65DbcVmwPd",
+    // 	port: 80,
+    // 	network_id: 4
+    // }
   }
 };

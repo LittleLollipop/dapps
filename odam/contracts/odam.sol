@@ -80,11 +80,30 @@ contract Game is Logger{
 		return token;
 	}
 	
+	function getPlayNumber () returns(uint res) {
+		return palyerNumber;
+	}
+
+	function getProgress () returns(uint res) {
+		return palyers.length;
+	}
+	
+	function getPrizePalyers () returns(address[] res) {
+		return prizePalyers;
+	}
+	
+	function getPrize () returns(uint256[] res) {
+		return prize;
+	}
+	
+	function isOpened () returns(bool res) {
+		return opened;
+	}
+
 	function addPalyer(address palyer) restricted{
 		
 		palyers.push(palyer);	
 	}
-	
 
 	function checkPrize () restricted returns(bool res){
 
@@ -94,10 +113,6 @@ contract Game is Logger{
 			finishedHash1 = block.blockhash(block.number - 10);
 		}
 		return finished;
-	}
-	
-	function isOpened () returns(bool res) {
-		return opened;
 	}
 	
 
@@ -205,14 +220,6 @@ contract Game is Logger{
 		return true;
     }
     
-    function getPrizeAddress () returns(address[] res){
-    	return prizePalyers;
-    }
-
-    function getPrize () returns(uint256[] res) {
-    	return prize;
-    }
-    
     
 }
 
@@ -255,6 +262,41 @@ contract Odam is ManagerContract, Logger{
 		return joinGame(gamesNumber - 1);
 	}
 	
+	function getGameNumber () public returns(uint256 res) {
+		return gamesNumber;
+	}
+
+	function isFinished(uint gameId) returns(bool res){
+		return games[gameId].isFinished();
+	}
+	
+	function getTicket(uint gameId) returns(uint256 res) {
+		return games[gameId].getTicket();
+	}
+
+	function getToken(uint gameId) returns(address res) {
+		return games[gameId].getToken();
+	}
+	
+	function getPlayNumber (uint gameId) returns(uint res) {
+		return games[gameId].getPlayNumber();
+	}
+
+	function getProgress (uint gameId) returns(uint res) {
+		return games[gameId].getProgress();
+	}
+	
+	function getPrizePalyers (uint gameId) returns(address[] res) {
+		return games[gameId].getPrizePalyers();
+	}
+	
+	function getPrize (uint gameId) returns(uint256[] res) {
+		return games[gameId].getPrize();
+	}
+	
+	function isOpened (uint gameId) returns(bool res) {
+		return games[gameId].isOpened();
+	}
 
 	function joinGame (uint256 gameId) returns(uint8 res) {
 		
@@ -273,14 +315,16 @@ contract Odam is ManagerContract, Logger{
 				createGame(nextGameContract, nextGamePalyerNumber, nextGameTicket);
 			}
 
-			for(uint i = opendNumber; i < finishedGames.length; i++){
+			bool openOnce = false;
+			for(uint i = opendNumber; i < finishedGames.length && !openOnce; i++){
 				log("checkPrize", i);
 				if(!finishedGames[i].isOpened()){
 					log("openGanme", i);
 					if(finishedGames[i].openPrize(msg.sender)){
 
-						sendPrize (finishedGames[i].getToken(), finishedGames[i].getPrizeAddress(), finishedGames[i].getPrize());
+						sendPrize (finishedGames[i].getToken(), finishedGames[i].getPrizePalyers(), finishedGames[i].getPrize());
 						opendNumber = i;
+						openOnce = true;
 					}
 				}
 			}

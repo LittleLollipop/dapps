@@ -14,7 +14,7 @@ module.exports = function(callback) {
 	var account9 = "0xEE5bBe5348E6995d6eCAfC51f69e939C5446D657";
 	var account10 = "0x615962aEc1c4C104Ee3d100de3c56B3E40491BDb"; 
 
-	odam.at("0x9514d37789ab2c9d700525b687086da07f274d1f").then(function(instance){
+	odam.at("0xf4c7fbb5e00df2dadd333bee22aafb690f7ff644").then(function(instance){
 
 		instance.joinGameNow({from:account1}).then(function(res){
 			console.log(JSON.stringify(res));

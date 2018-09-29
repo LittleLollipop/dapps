@@ -16,25 +16,25 @@ module.exports = function(callback) {
 
 	TestCoin.at("0x0656b144b1b94bc354d1f52afa912904790ec627").then(function(instance){
 
-    	instance.approve(delegate, 10000 ** 18, {from: account1}).then(function(tx_id){
-		 instance.approve(delegate, 10000 ** 18, {from: account2}).then(function(tx_id){
-	 	  instance.approve(delegate, 10000 ** 18, {from: account3}).then(function(tx_id){
-	 	   instance.approve(delegate, 10000 ** 18, {from: account4}).then(function(tx_id){
-	 	    instance.approve(delegate, 10000 ** 18, {from: account5}).then(function(tx_id){
- 	    	 instance.approve(delegate, 10000 ** 18, {from: account6}).then(function(tx_id){
-    	 	  instance.approve(delegate, 10000 ** 18, {from: account7}).then(function(tx_id){
-    	 	   instance.approve(delegate, 10000 ** 18, {from: account8}).then(function(tx_id){
-    	 	  	instance.approve(delegate, 10000 ** 18, {from: account9}).then(function(tx_id){
-    	 	  	 instance.approve(delegate, 10000 ** 18, {from: account10}).then(function(tx_id){
-    	 	     });
-    	 	    });
-    	 	   });
-    	 	  });
- 	    	 });
-	 	    });
-	 	   });
-	 	  });
-		 });
+    	instance.approve(delegate, 1000000000000000000 * 100000000, {from: account1}).then(function(tx_id){
+		 // instance.approve(delegate, 10000 ** 18, {from: account2}).then(function(tx_id){
+	 	//   instance.approve(delegate, 10000 ** 18, {from: account3}).then(function(tx_id){
+	 	//    instance.approve(delegate, 10000 ** 18, {from: account4}).then(function(tx_id){
+	 	//     instance.approve(delegate, 10000 ** 18, {from: account5}).then(function(tx_id){
+ 	 //    	 instance.approve(delegate, 10000 ** 18, {from: account6}).then(function(tx_id){
+   //  	 	  instance.approve(delegate, 10000 ** 18, {from: account7}).then(function(tx_id){
+   //  	 	   instance.approve(delegate, 10000 ** 18, {from: account8}).then(function(tx_id){
+   //  	 	  	instance.approve(delegate, 10000 ** 18, {from: account9}).then(function(tx_id){
+   //  	 	  	 instance.approve(delegate, 10000 ** 18, {from: account10}).then(function(tx_id){
+   //  	 	     });
+   //  	 	    });
+   //  	 	   });
+   //  	 	  });
+ 	 //    	 });
+	 	//     });
+	 	//    });
+	 	//   });
+		 // });
     	});
 
 

@@ -117,9 +117,9 @@ contract TestCoin is StandardToken {
     function TestCoin() {
         balances[msg.sender] = 4*10**27;               // Give the creator all initial tokens 
         totalSupply = 4*10**27;   // Update total supply 
-        name = "MT Token";        // Set the name for display purposes
+        name = "TNT Token";        // Set the name for display purposes
         decimals = 18;           // Amount of decimals for display purposes
-        symbol = "MT";         // Set the symbol for display purposes
+        symbol = "TNT";         // Set the symbol for display purposes
     }
 
     /* Approves and then calls the receiving contract */
