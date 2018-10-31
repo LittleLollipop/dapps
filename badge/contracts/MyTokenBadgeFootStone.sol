@@ -336,5 +336,9 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         require(_interfaceId != 0xffffffff);
         supportedInterfaces[_interfaceId] = true;
     }
+
+    function () payable{
+        require(false);
+    }
 }
 

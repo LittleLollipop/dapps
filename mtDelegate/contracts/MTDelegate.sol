@@ -14,31 +14,31 @@ contract ERC20 {
 
 contract Delegate {
   function callTransfer(address contract_address, address from, address to, uint256 value) public returns (bool);
-  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public;
-  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public;
+  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public returns(bool);
+  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public returns(bool);
 }
 
 contract MTDelegate is ManagerContract, Delegate, Logger {
     
-  mapping(address => uint256) contracts;    
+  mapping(address => mapping(address => uint256)) internal contracts;    
 
-  function updateContract(address contract_address, uint256 _permission) public restricted {
-    contracts[contract_address] = _permission;
+  function updateContract(address contract_address, address token_address, uint256 _permission) public restricted {
+    contracts[contract_address][token_address] = _permission;
   }
 
-  function permissionOf(address contract_address) constant returns (uint256 permission) {
-    return contracts[contract_address];
+  function permissionOf(address contract_address, address token_address) constant returns (uint256 permission) {
+    return contracts[contract_address][token_address];
   }
 
-  function checkPermission (address contract_address, uint256 _value) returns(bool res) {
-    return contracts[contract_address] >= _value && _value >= 0;
+  function checkPermission (address contract_address, address token_address, uint256 _value) returns(bool res) {
+    return contracts[contract_address][token_address] >= _value && _value >= 0;
   }
     
   function callTransfer(address contract_address,address from,address to,uint256 value) public returns(bool){
 
     bool result = false;
     uint state;
-    if(checkPermission(msg.sender, value)){
+    if(checkPermission(msg.sender, contract_address, value)){
       state = 2;
       log("callTransfer state", state);
 
@@ -54,7 +54,7 @@ contract MTDelegate is ManagerContract, Delegate, Logger {
     return result;
   }
 
-  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public {
+  function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public returns(bool){
 
     uint256 maxValue = 0;
     uint state; 
@@ -68,7 +68,7 @@ contract MTDelegate is ManagerContract, Delegate, Logger {
       }
     }
 
-    if(checkPermission(msg.sender, maxValue)){
+    if(checkPermission(msg.sender, _tokenAddr, maxValue)){
       state = 2;
       log("multisend state", state);
 
@@ -78,14 +78,16 @@ contract MTDelegate is ManagerContract, Delegate, Logger {
         require(token.transfer(dests[i], values[i]));
       }
       
+      return true;
     }else{
 
       state = 1;
       log("multisend state", state);
+      return false;
     }
   }
 
-  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public {
+  function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public returns(bool){
 
     uint256 maxValue = 0;
     uint state; 
@@ -100,7 +102,7 @@ contract MTDelegate is ManagerContract, Delegate, Logger {
       }
     }
 
-    if(checkPermission(msg.sender, maxValue)){
+    if(checkPermission(msg.sender, _tokenAddr, maxValue)){
       state = 2;
       log("multisend state", state);
 
@@ -110,10 +112,17 @@ contract MTDelegate is ManagerContract, Delegate, Logger {
         require(token.transferFrom(from, dests[i], values[i]));
       }
       
+      return true;
     }else{
 
       state = 1;
       log("multisend state", state);
+      return false;
     }
   }
+
+  function () payable{
+    require(false);
+  }
+  
 }

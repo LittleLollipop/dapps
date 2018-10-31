@@ -6,6 +6,8 @@ import "./ManagerContract.sol";
 
 
 interface MetadataConverter {
+	function tokenBaseMapURI() view returns (string);
+	function tokenIconURI() view returns (string);	
 	function tokenURI(uint256 _tokenId) view returns (string);	
 	function name(uint256 _tokenId) view returns (string);
 }
@@ -31,7 +33,7 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
 
 	string public constant NAME = "GenesisBadge";
     string public constant SYMBOL = "GB";
-    uint total = 32;
+    uint total = 50;
     MetadataConverter metadataURIConverter;
 
 	constructor() public {
@@ -70,24 +72,24 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
         tokenOwner[29] = owner;
         tokenOwner[30] = owner;
         tokenOwner[31] = owner;
-        // tokenOwner[32] = owner;
-        // tokenOwner[33] = owner;
-        // tokenOwner[34] = owner;
-        // tokenOwner[35] = owner;
-        // tokenOwner[36] = owner;
-        // tokenOwner[37] = owner;
-        // tokenOwner[38] = owner;
-        // tokenOwner[39] = owner;
-        // tokenOwner[40] = owner;
-        // tokenOwner[41] = owner;
-        // tokenOwner[42] = owner;
-        // tokenOwner[43] = owner;
-        // tokenOwner[44] = owner;
-        // tokenOwner[45] = owner;
-        // tokenOwner[46] = owner;
-        // tokenOwner[47] = owner;
-        // tokenOwner[48] = owner;
-        // tokenOwner[49] = owner;
+        tokenOwner[32] = owner;
+        tokenOwner[33] = owner;
+        tokenOwner[34] = owner;
+        tokenOwner[35] = owner;
+        tokenOwner[36] = owner;
+        tokenOwner[37] = owner;
+        tokenOwner[38] = owner;
+        tokenOwner[39] = owner;
+        tokenOwner[40] = owner;
+        tokenOwner[41] = owner;
+        tokenOwner[42] = owner;
+        tokenOwner[43] = owner;
+        tokenOwner[44] = owner;
+        tokenOwner[45] = owner;
+        tokenOwner[46] = owner;
+        tokenOwner[47] = owner;
+        tokenOwner[48] = owner;
+        tokenOwner[49] = owner;
 
         ownedTokens[owner].push(uint8(0));
         ownedTokens[owner].push(uint8(1));
@@ -121,24 +123,76 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
         ownedTokens[owner].push(uint8(29));
         ownedTokens[owner].push(uint8(30));
         ownedTokens[owner].push(uint8(31));
-        // ownedTokens[owner].push(uint8(32));
-        // ownedTokens[owner].push(uint8(33));
-        // ownedTokens[owner].push(uint8(34));
-        // ownedTokens[owner].push(uint8(35));
-        // ownedTokens[owner].push(uint8(36));
-        // ownedTokens[owner].push(uint8(37));
-        // ownedTokens[owner].push(uint8(38));
-        // ownedTokens[owner].push(uint8(39));
-        // ownedTokens[owner].push(uint8(40));
-        // ownedTokens[owner].push(uint8(41));
-        // ownedTokens[owner].push(uint8(42));
-        // ownedTokens[owner].push(uint8(43));
-        // ownedTokens[owner].push(uint8(44));
-        // ownedTokens[owner].push(uint8(45));
-        // ownedTokens[owner].push(uint8(46));
-        // ownedTokens[owner].push(uint8(47));
-        // ownedTokens[owner].push(uint8(48));
-        // ownedTokens[owner].push(uint8(49));
+        ownedTokens[owner].push(uint8(32));
+        ownedTokens[owner].push(uint8(33));
+        ownedTokens[owner].push(uint8(34));
+        ownedTokens[owner].push(uint8(35));
+        ownedTokens[owner].push(uint8(36));
+        ownedTokens[owner].push(uint8(37));
+        ownedTokens[owner].push(uint8(38));
+        ownedTokens[owner].push(uint8(39));
+        ownedTokens[owner].push(uint8(40));
+        ownedTokens[owner].push(uint8(41));
+        ownedTokens[owner].push(uint8(42));
+        ownedTokens[owner].push(uint8(43));
+        ownedTokens[owner].push(uint8(44));
+        ownedTokens[owner].push(uint8(45));
+        ownedTokens[owner].push(uint8(46));
+        ownedTokens[owner].push(uint8(47));
+        ownedTokens[owner].push(uint8(48));
+        ownedTokens[owner].push(uint8(49));
+
+		ownedTokensIndex.push(0);
+		ownedTokensIndex.push(1);
+		ownedTokensIndex.push(2);
+		ownedTokensIndex.push(3);
+		ownedTokensIndex.push(4);
+		ownedTokensIndex.push(5);
+		ownedTokensIndex.push(6);
+		ownedTokensIndex.push(7);
+		ownedTokensIndex.push(8);
+		ownedTokensIndex.push(9);
+		ownedTokensIndex.push(10);
+		ownedTokensIndex.push(11);
+		ownedTokensIndex.push(12);
+		ownedTokensIndex.push(13);
+		ownedTokensIndex.push(14);
+		ownedTokensIndex.push(15);
+		ownedTokensIndex.push(16);
+		ownedTokensIndex.push(17);
+		ownedTokensIndex.push(18);
+		ownedTokensIndex.push(19);
+		ownedTokensIndex.push(20);
+		ownedTokensIndex.push(21);
+		ownedTokensIndex.push(22);
+		ownedTokensIndex.push(23);
+		ownedTokensIndex.push(24);
+		ownedTokensIndex.push(25);
+		ownedTokensIndex.push(26);
+		ownedTokensIndex.push(27);
+		ownedTokensIndex.push(28);
+		ownedTokensIndex.push(29);
+		ownedTokensIndex.push(30);
+		ownedTokensIndex.push(31);
+        ownedTokensIndex.push(32);
+        ownedTokensIndex.push(33);
+        ownedTokensIndex.push(34);
+        ownedTokensIndex.push(35);
+        ownedTokensIndex.push(36);
+        ownedTokensIndex.push(37);
+        ownedTokensIndex.push(38);
+        ownedTokensIndex.push(39);
+        ownedTokensIndex.push(40);
+        ownedTokensIndex.push(41);
+        ownedTokensIndex.push(42);
+        ownedTokensIndex.push(43);
+        ownedTokensIndex.push(44);
+        ownedTokensIndex.push(45);
+        ownedTokensIndex.push(46);
+        ownedTokensIndex.push(47);
+        ownedTokensIndex.push(48);
+        ownedTokensIndex.push(49);
+
     }
 
     function updateURIConverter (address _URIConverter) restricted {
@@ -159,6 +213,14 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
 
     function tokenURI(uint256 _tokenId) external view returns (string){
     	return metadataURIConverter.tokenURI(_tokenId);
+    }
+
+	function tokenBaseMapURI() external view returns (string){
+    	return metadataURIConverter.tokenBaseMapURI();
+    }
+
+    function tokenIconURI() external view returns (string){
+    	return metadataURIConverter.tokenIconURI();
     }
 
     function totalSupply() view returns (uint256){

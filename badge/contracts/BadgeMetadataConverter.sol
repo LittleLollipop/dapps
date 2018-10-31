@@ -3,6 +3,8 @@ pragma solidity ^0.4.23;
 interface MetadataConverter {
 	function tokenURI(uint256 _tokenId) view returns (string);	
 	function name(uint256 _tokenId) view returns (string);
+  function tokenBaseMapURI() view returns (string);
+  function tokenIconURI() view returns (string);  
 }
 
 library Strings {
@@ -69,6 +71,14 @@ contract BadgeMetadataConverter {
 	function name(uint256 _tokenId) view returns (string){
 		return "";
 	}
+
+  function tokenBaseMapURI() view returns (string){
+    return "http://i1.bvimg.com/664748/b9dc0a4383af4645.jpg";
+  }
+  
+  function tokenIconURI() view returns (string){
+    return "http://i1.bvimg.com/664748/b9dc0a4383af4645.jpg";
+  }
 }
 
 
