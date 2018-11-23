@@ -6,8 +6,12 @@ import "./ManagerContract.sol";
 
 
 interface MetadataConverter {
-	function tokenBaseMapURI() view returns (string);
-	function tokenIconURI() view returns (string);	
+
+    function tokenSLogoURI() view returns (string);
+    function tokenBLogoURI() view returns (string);
+    function tokenSLogoBGURI() view returns (string);
+    function tokenBLogoBGURI() view returns (string);
+	function tokenBGURI() view returns (string);
 	function tokenURI(uint256 _tokenId) view returns (string);	
 	function name(uint256 _tokenId) view returns (string);
 }
@@ -215,12 +219,24 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
     	return metadataURIConverter.tokenURI(_tokenId);
     }
 
-	function tokenBaseMapURI() external view returns (string){
-    	return metadataURIConverter.tokenBaseMapURI();
+    function tokenSLogoURI() external view returns (string){
+        return metadataURIConverter.tokenSLogoURI();
     }
 
-    function tokenIconURI() external view returns (string){
-    	return metadataURIConverter.tokenIconURI();
+    function tokenBLogoURI() external view returns (string){
+        return metadataURIConverter.tokenBLogoURI();
+    }
+
+    function tokenSLogoBGURI() external view returns (string){
+        return metadataURIConverter.tokenSLogoBGURI();
+    }
+
+    function tokenBLogoBGURI() external view returns (string){
+        return metadataURIConverter.tokenBLogoBGURI();
+    }
+
+    function tokenBGURI() external view returns (string){
+        return metadataURIConverter.tokenBGURI();
     }
 
     function totalSupply() view returns (uint256){

@@ -1,10 +1,13 @@
 pragma solidity ^0.4.23;
 
 interface MetadataConverter {
-	function tokenURI(uint256 _tokenId) view returns (string);	
-	function name(uint256 _tokenId) view returns (string);
-  function tokenBaseMapURI() view returns (string);
-  function tokenIconURI() view returns (string);  
+  function tokenURI(uint256 _tokenId) view returns (string);  
+  function name(uint256 _tokenId) view returns (string);
+    function tokenSLogoURI() view returns (string);
+    function tokenBLogoURI() view returns (string);
+    function tokenSLogoBGURI() view returns (string);
+    function tokenBLogoBGURI() view returns (string);
+    function tokenBGURI() view returns (string);
 }
 
 library Strings {
@@ -62,23 +65,41 @@ library Strings {
  */
 contract BadgeMetadataConverter {
 
- 	using Strings for string;
+    using Strings for string;
+    
+    function tokenURI(uint256 _tokenId) view returns (string){
+    
+      return Strings.strConcat(
+            "https://cdn.mytoken.org/badge_gb_",
+            Strings.uint2str(_tokenId),".png"
+        );
+    }
+    
+    function name(uint256 _tokenId) view returns (string){
+      return "";
+    }
+    
+    function tokenSLogoURI() view returns (string){
+        return "https://cdn.mytoken.org/badge_gb_logo_s.png";
+    }
+    
+    function tokenBLogoURI() view returns (string){
+        return "https://cdn.mytoken.org/badge_gb_logo_b.png";
+    }
+    
+    function tokenSLogoBGURI() view returns (string){
+        return "https://cdn.mytoken.org/badge_gb_logo_s_bg.png";
+    }
+    
+    function tokenBLogoBGURI() view returns (string){
+        return "https://cdn.mytoken.org/badge_gb_logo_b_bg.png";
+    }
+    
+    function tokenBGURI() view returns (string){
+        return "https://cdn.mytoken.org/badge_gb_bg.png";
+    }
 
-	function tokenURI(uint256 _tokenId) view returns (string){
-		return "http://i1.bvimg.com/664748/b9dc0a4383af4645.jpg";
-	}
 
-	function name(uint256 _tokenId) view returns (string){
-		return "";
-	}
-
-  function tokenBaseMapURI() view returns (string){
-    return "http://i1.bvimg.com/664748/b9dc0a4383af4645.jpg";
-  }
-  
-  function tokenIconURI() view returns (string){
-    return "http://i1.bvimg.com/664748/b9dc0a4383af4645.jpg";
-  }
 }
 
 

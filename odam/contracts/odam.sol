@@ -10,8 +10,8 @@ import "./Logger.sol";
 
 contract Delegate {
 	function callTransfer(address contract_address, address from, address to, uint256 value) public returns (bool);
-	function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public;
-	function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public;
+	function multisend(address _tokenAddr, address from, address[] dests, uint256[] values) public returns(bool);
+	function multisendSelf(address _tokenAddr, address[] dests, uint256[] values) public returns(bool);
 }
 
 /**
@@ -19,46 +19,64 @@ contract Delegate {
  */
 contract Game is Logger{
 
-	address token;
+	Odam internal odam;
 
-	uint palyerNumber;
+	address internal nextGameContract;
+	
+	uint internal nextGamePalyerNumber;
+	
+	uint256 internal nextGameTicket;
 
-	uint256 ticket; 
+	Game[] internal finishedGames;
+	
+	uint256 internal opendNumber;
+	
+	uint internal gamesNumber;
 
-	bool finished;
+	address internal owner;
 
-	bool opened;
+	mapping ( uint256 => address ) internal token;
 
-	address[] palyers;
+	mapping ( uint256 => uint ) internal palyerNumber;
 
-	uint[] prizeNumber;
+	mapping ( uint256 => uint256 ) internal ticket; 
 
-	address last;
+	mapping ( uint256 => bool ) internal finished;
 
-	Odam odam;
+	mapping ( uint256 => bool ) internal opened;
 
-	uint finishedNumber;
+	mapping ( uint256 => address[] ) internal palyers;
 
-	bytes32 finishedHash1;
+	mapping ( uint256 => uint[] ) internal prizeNumber;
 
-	bytes32 finishedHash2;
+	mapping ( uint256 => address ) internal last;
 
-	address owner;
+	mapping ( uint256 => uint ) internal finishedNumber;
 
-	address gameManager;
+	mapping ( uint256 => bytes32 ) internal finishedHash1;
 
-	address[] prizePalyers;
+	mapping ( uint256 => bytes32 ) internal finishedHash2;
 
-	uint256[] prize;
+	mapping ( uint256 => address ) internal gameManager;
 
-	constructor (address _token, uint _palyerNumber, uint256 _ticket, Odam _odam, address _owner) {
-		
+	mapping ( uint256 => address[] ) internal prizePalyers;
+
+	mapping ( uint256 => uint256[] ) internal prize;
+
+	constructor (Odam _odam, address _owner) {
+		odam = _odam;
+		owner = _owner;
+		opendNumber = 0;
+	}
+
+	createGame(address _token, uint _palyerNumber, uint256 _ticket, Odam _odam){
+
+
+
 		token = _token;
 		palyerNumber = _palyerNumber;
 		ticket = _ticket;
 		finished = false;
-		odam = _odam;
-		owner = _owner;
 		gameManager = msg.sender;
 		opened = false;
 		log("owner", owner);
@@ -68,79 +86,79 @@ contract Game is Logger{
     	if (msg.sender == gameManager) _;
   	}
 
-	function isFinished() returns(bool res){
-		return finished;
+	function isFinished(uint256 gameid) returns(bool res){
+		return finished[gameid];
 	}
 	
-	function getTicket() returns(uint256 res) {
-		return ticket;
+	function getTicket(uint256 gameId) returns(uint256 res) {
+		return ticket[ganmeId];
 	}
 
-	function getToken() returns(address res) {
-		return token;
+	function getToken(uint256 gameId) returns(address res) {
+		return token[gameId];
 	}
 	
-	function getPlayNumber () returns(uint res) {
-		return palyerNumber;
+	function getPlayNumber (uint256 gameId) returns(uint res) {
+		return palyerNumber[gameId];
 	}
 
-	function getProgress () returns(uint res) {
-		return palyers.length;
+	function getProgress (uint256 gameId) returns(uint res) {
+		return palyers[gameId].length;
 	}
 	
-	function getPrizePalyers () returns(address[] res) {
-		return prizePalyers;
+	function getPrizePalyers (uint256 gameId) returns(address[] res) {
+		return prizePalyers[gameId];
 	}
 	
-	function getPrize () returns(uint256[] res) {
-		return prize;
+	function getPrize (uint256 gameId) returns(uint256[] res) {
+		return prize[gameId];
 	}
 	
-	function isOpened () returns(bool res) {
-		return opened;
+	function isOpened (uint256 gameId) returns(bool res) {
+		return opened[gameId];
 	}
 
-	function addPalyer(address palyer) restricted{
+	function addPalyer(uint256 gameId, address palyer) restricted{
 		
-		palyers.push(palyer);	
+		palyers[gameId].push(palyer);	
 	}
 
-	function checkPrize () restricted returns(bool res){
+	function checkPrize (uint256 gameId) restricted returns(bool res){
 
-		if(palyers.length >= palyerNumber){
-			finished = true;
-			finishedNumber = block.number + 10;
-			finishedHash1 = block.blockhash(block.number - 10);
+		if(palyers[gameId].length >= palyerNumber[gameId]){
+			finished[gameId] = true;
+			finishedNumber[gameId] = block.number + 10;
+			finishedHash1[gameId] = block.blockhash(block.number - 10);
 		}
-		return finished;
+		return finished[gameId];
 	}
 	
 
-	function openPrize (address _address) returns(bool res){
+	function openPrize (uint256 gameId, address _address) returns(bool res){
 
-		if(opened)
+		if(opened[gameId])
 			return;
 				
 		log("checkBlock", block.number);
 		log("finishedNumber", finishedNumber);
-		if(finishedNumber < block.number){
+		if(finishedNumber[gameId] < block.number){
 			
-			finishedHash2 = block.blockhash(block.number - 1);
+			finishedHash2[gameId] = block.blockhash(block.number - 1);
 
-			last = _address;
+			last[gameId] = _address;
 
-			return random();
+			return random(gameId);
 		}
 
 		return false;
 	}
 
-	function random () returns(bool res){
+	function random (uint256 gameId) returns(bool res){
 
 		bytes memory finishedHashInfo = new bytes(64);
 		for(uint i = 0; i < 32; i++){
-			finishedHashInfo[i] = finishedHash1[i];
-			finishedHashInfo[i + 32] = finishedHash2[i];
+			finishedHashInfo[i] = finishedHash1[gameId][i];
+			finishedHashInfo[i + 32] = finishedHash2[gameId][i];
 		}
 		bytes32 finishedHash = keccak256(finishedHashInfo);
 		
@@ -184,40 +202,44 @@ contract Game is Logger{
 		log("randomNumber4", randomNumber4);
 		log("randomNumber5", randomNumber5);
 
-		prizeNumber.push(randomNumber1);
-		prizeNumber.push(randomNumber2);
-		prizeNumber.push(randomNumber3);
-		prizeNumber.push(randomNumber4);
-		prizeNumber.push(randomNumber5);
+		prizeNumber[gameId].push(randomNumber1);
+		prizeNumber[gameId].push(randomNumber2);
+		prizeNumber[gameId].push(randomNumber3);
+		prizeNumber[gameId].push(randomNumber4);
+		prizeNumber[gameId].push(randomNumber5);
 
 		return sendPrize();
 	}
 
-    function sendPrize () returns(bool res) {
+    function sendPrize (uint256 gameId) returns(bool res) {
     	log("last", last);
 		log("owner", owner);
 
-		prizePalyers.push(palyers[prizeNumber[0]]);
-		prizePalyers.push(palyers[prizeNumber[1]]);
-		prizePalyers.push(palyers[prizeNumber[2]]);
-		prizePalyers.push(palyers[prizeNumber[3]]);
-		prizePalyers.push(palyers[prizeNumber[4]]);
+		prizePalyers[gameId].push(palyers[gameId][prizeNumber[0]]);
+		prizePalyers[gameId].push(palyers[gameId][prizeNumber[1]]);
+		prizePalyers[gameId].push(palyers[gameId][prizeNumber[2]]);
+		prizePalyers[gameId].push(palyers[gameId][prizeNumber[3]]);
+		prizePalyers[gameId].push(palyers[gameId][prizeNumber[4]]);
     	
 		// prizePalyers[5] = last;
 		// prizePalyers[6] = owner;
 
-		prize.push(ticket * palyerNumber / 2);
-		prize.push(ticket * palyerNumber / 10);
-		prize.push(ticket * palyerNumber / 10);
-		prize.push(ticket * palyerNumber / 10);
-		prize.push(ticket * palyerNumber / 10);
+		prize[gameId].push(ticket[gameId] * palyerNumber[gameId] / 2);
+		prize[gameId].push(ticket[gameId] * palyerNumber[gameId] / 10);
+		prize[gameId].push(ticket[gameId] * palyerNumber[gameId] / 10);
+		prize[gameId].push(ticket[gameId] * palyerNumber[gameId] / 10);
+		prize[gameId].push(ticket[gameId] * palyerNumber[gameId] / 10);
 
 		// prize[5] = ticket * palyerNumber / 20;
 		// prize[6] = ticket * palyerNumber / 20;
 
-		opened = true;
+		opened[gameId] = true;
 
 		return true;
+    }
+    
+    function canJoin (uint256 gameid) returns(bool res) {
+    	return gamesNumber >= gameId && !isFinished(gameid);
     }
     
     
@@ -229,20 +251,16 @@ contract Game is Logger{
  */
 contract Odam is ManagerContract, Logger{
 
+	event JoinGame(address indexed _from, uint indexed _gameId);
 
-	Game[] finishedGames;
-	uint256 opendNumber;
-	mapping(uint => Game) games;
-	uint gamesNumber;
+
+	mapping(uint256 => Game) games;
 	Delegate delegate;
 	address delegateAddress;
 
-	address nextGameContract;
-	uint nextGamePalyerNumber;
-	uint256 nextGameTicket;
-	
+
 	constructor() public {
-    	opendNumber = 0;
+    	
   	}
 
 	function upgroundDelegateAddress (address new_delegate) public restricted returns(bool res)  {
@@ -251,15 +269,18 @@ contract Odam is ManagerContract, Logger{
 	}
 	
 
-	function createGameAndJoin (address _contract, uint256 palyerNumber, uint256 ticket) returns(bool res) {
-		if(createGame(_contract, palyerNumber, ticket)){
-			joinGame(gamesNumber - 1);
-		}
-		return false;
-	}
+	// function createGameAndJoin (address _contract, uint256 palyerNumber, uint256 ticket) returns(bool res) {
+	// 	if(createGame(_contract, palyerNumber, ticket)){
+	// 		joinGame(gamesNumber - 1);
+	// 	}
+	// 	return false;
+	// }
 	
-	function joinGameNow () returns(uint8 res) {
-		return joinGame(gamesNumber - 1);
+	function joinGameNow (uint256 roomNumber){
+
+		uint gameid = games[roomNumber].gamesNumber - 1;
+		require(joinGame(roomNumber, gameid) == 1);
+		emit JoinGame(msg.sender, gameid);
 	}
 	
 	function getGameNumber () public returns(uint256 res) {
@@ -298,45 +319,47 @@ contract Odam is ManagerContract, Logger{
 		return games[gameId].isOpened();
 	}
 
-	function joinGame (uint256 gameId) returns(uint8 res) {
+	function joinGame (uint256 roomNumber, uint256 gameId) returns(uint8 res) {
 		
 		uint joinState;
-		if(gamesNumber >= gameId && !games[gameId].isFinished()){
-			if(!delegate.callTransfer(games[gameId].getToken(), msg.sender, delegateAddress, games[gameId].getTicket())){
-				
+
+		if(games[roomNumber].canJoin(gameId)){}
+			if(!delegate.callTransfer(games[roomNumber].getToken(gameId), msg.sender, delegateAddress, games[roomNumber].getTicket(gameId))){
 				joinState = 3;
 				log("joinState", joinState);
 				return 3;
 			}
-			games[gameId].addPalyer(msg.sender);
+			games[roomNumber].addPalyer(gameId, msg.sender);
 
-			if(games[gameId].checkPrize()){
+			if(games[roomNumber].checkPrize(gameId)){
 				finishedGames.push(games[gameId]);
 				createGame(nextGameContract, nextGamePalyerNumber, nextGameTicket);
 			}
 
-			bool openOnce = false;
-			for(uint i = opendNumber; i < finishedGames.length && !openOnce; i++){
-				log("checkPrize", i);
-				if(!finishedGames[i].isOpened()){
-					log("openGanme", i);
-					if(finishedGames[i].openPrize(msg.sender)){
+		// 	bool openOnce = false;
+		// 	for(uint i = opendNumber; i < finishedGames.length && !openOnce; i++){
+		// 		log("checkPrize", i);
+		// 		if(!finishedGames[i].isOpened()){
+		// 			log("openGanme", i);
+		// 			if(finishedGames[i].openPrize(msg.sender)){
 
-						sendPrize (finishedGames[i].getToken(), finishedGames[i].getPrizePalyers(), finishedGames[i].getPrize());
-						opendNumber = i;
-						openOnce = true;
-					}
-				}
-			}
+		// 				if(sendPrize (finishedGames[i].getToken(), finishedGames[i].getPrizePalyers(), finishedGames[i].getPrize())){
+		// 					opendNumber = i;
+		// 					openOnce = true;
+		// 				}
+						
+		// 			}
+		// 		}
+		// 	}
 			
-			joinState = 1;
-			log("joinState", joinState);
-			return 1;
-		}
+		// 	joinState = 1;
+		// 	log("joinState", joinState);
+		// 	return 1;
+		// }
 		
-		joinState = 2;
-		log("joinState", joinState);
-		return 2;
+		// joinState = 2;
+		// log("joinState", joinState);
+		// return 2;
 	}
 	
 	function upgroundNextGameInfo (address _contract, uint palyerNumber, uint256 ticket) public restricted returns(bool res) {
