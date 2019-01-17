@@ -12,14 +12,15 @@ interface MetadataConverter {
     function tokenSLogoBGURI() view returns (string);
     function tokenBLogoBGURI() view returns (string);
 	function tokenBGURI() view returns (string);
-	function tokenURI(uint256 _tokenId) view returns (string);	
+	function tokenURI(uint256 _tokenId) view returns (string);
 	function name(uint256 _tokenId) view returns (string);
 }
 
 
 contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerable, ERC721Metadata {
 
-	bytes4 private constant InterfaceId_ERC721Enumerable = 0x780e9d63;
+
+    bytes4 private constant InterfaceId_ERC721Enumerable = 0x780e9d63;
     /**
     * 0x780e9d63 ===
     *   bytes4(keccak256('totalSupply()')) ^
@@ -253,4 +254,3 @@ contract GenesisBadge is MyTokenBadgeFootStone, ManagerContract, ERC721Enumerabl
         return ownedTokens[_owner][_index];
     }
 }
-

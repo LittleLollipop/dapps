@@ -1,18 +1,18 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 interface ERC721 /* is ERC165 */ {
-   
+
     event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
 
     event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
-    
+
     event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
 
     function balanceOf(address _owner) external view returns (uint256);
 
     function ownerOf(uint256 _tokenId) external view returns (address);
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) payable;
+    // function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) external payable;
 
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
 
@@ -22,33 +22,33 @@ interface ERC721 /* is ERC165 */ {
 
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    function getApproved(uint256 _tokenId) view returns (address);
+    function getApproved(uint256 _tokenId) view external returns (address);
 
-    function isApprovedForAll(address _owner, address _operator) view returns (bool);
+    function isApprovedForAll(address _owner, address _operator) view external returns (bool);
 }
 
 interface ERC165 {
-   
+
     function supportsInterface(bytes4 interfaceID) external view returns (bool);
 }
 
 /// @dev Note: the ERC-165 identifier for this interface is 0x150b7a02.
 interface ERC721TokenReceiver {
-  
-    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes _data) external returns(bytes4);
+
+    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes calldata _data) external returns(bytes4);
 }
 
 interface ERC721Metadata /* is ERC721 */ {
-    
-    function name() external view returns (string _name);
 
-    function symbol() external view returns (string _symbol);
+    function name() external view returns (string memory _name);
 
-    function tokenURI(uint256 _tokenId) external view returns (string);
+    function symbol() external view returns (string memory _symbol);
+
+    function tokenURI(uint256 _tokenId) external view returns (string memory);
 }
 
 interface ERC721Enumerable /* is ERC721 */ {
-    
+
     function totalSupply() external view returns (uint256);
 
     function tokenByIndex(uint256 _index) external view returns (uint256);
@@ -57,9 +57,9 @@ interface ERC721Enumerable /* is ERC721 */ {
 }
 
 library Strings {
-    
+
   // via https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol
-  function strConcat(string _a, string _b, string _c, string _d, string _e) internal pure returns (string) {
+  function strConcat(string memory _a, string memory _b, string memory _c, string memory _d, string memory _e) internal pure returns (string memory) {
       bytes memory _ba = bytes(_a);
       bytes memory _bb = bytes(_b);
       bytes memory _bc = bytes(_c);
@@ -69,41 +69,25 @@ library Strings {
       bytes memory babcde = bytes(abcde);
       uint k = 0;
       for (uint i = 0; i < _ba.length; i++) babcde[k++] = _ba[i];
-      for (i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
-      for (i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
-      for (i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
-      for (i = 0; i < _be.length; i++) babcde[k++] = _be[i];
+      for (uint i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
+      for (uint i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
+      for (uint i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
+      for (uint i = 0; i < _be.length; i++) babcde[k++] = _be[i];
       return string(babcde);
     }
 
-    function strConcat(string _a, string _b, string _c, string _d) internal pure returns (string) {
+    function strConcat(string memory _a, string memory _b, string memory _c, string memory _d) internal pure returns (string memory) {
         return strConcat(_a, _b, _c, _d, "");
     }
 
-    function strConcat(string _a, string _b, string _c) internal pure returns (string) {
+    function strConcat(string memory _a, string memory _b, string memory _c) internal pure returns (string memory) {
         return strConcat(_a, _b, _c, "", "");
     }
 
-    function strConcat(string _a, string _b) internal pure returns (string) {
+    function strConcat(string memory _a, string memory _b) internal pure returns (string memory) {
         return strConcat(_a, _b, "", "", "");
     }
 
-    function uint2str(uint i) internal pure returns (string) {
-        if (i == 0) return "0";
-        uint j = i;
-        uint len;
-        while (j != 0){
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (i != 0){
-            bstr[k--] = byte(48 + i % 10);
-            i /= 10;
-        }
-        return string(bstr);
-    }
 }
 
 library AddressUtils {
@@ -179,7 +163,7 @@ library SafeMath {
 contract MyTokenBadgeFootStone is ERC721, ERC165 {
 
     bytes4 internal constant ERC721_RECEIVED = 0x150b7a02;
-    
+
     bytes4 public constant InterfaceId_ERC165 = 0x01ffc9a7;
 
     bytes4 private constant InterfaceId_ERC721 = 0x80ac58cd;
@@ -221,7 +205,7 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         return supportedInterfaces[_interfaceId];
     }
 
-    function balanceOf(address _owner) view returns (uint256){
+    function balanceOf(address _owner) external view returns (uint256){
         return ownedTokens[_owner].length;
     }
 
@@ -244,7 +228,7 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         _;
     }
 
-    function transferFrom(address _from, address _to, uint256 _tokenId) payable canTransfer(_tokenId){
+    function transferFrom(address _from, address _to, uint256 _tokenId) public payable canTransfer(_tokenId){
         require(_from != address(0));
         require(_to != address(0));
 
@@ -255,7 +239,7 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         emit Transfer(_from, _to, _tokenId);
     }
 
-    function checkAndCallSafeTransfer(address _from, address _to, uint256 _tokenId, bytes _data) internal returns (bool){
+    function checkAndCallSafeTransfer(address _from, address _to, uint256 _tokenId, bytes memory _data) internal returns (bool){
         if (!_to.isContract()) {
             return true;
         }
@@ -263,13 +247,13 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         return (retval == ERC721_RECEIVED);
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) payable{
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory data) public payable{
         transferFrom(_from, _to, _tokenId);
 
         require(checkAndCallSafeTransfer(_from, _to, _tokenId, data));
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) payable{
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) public payable{
         safeTransferFrom(_from, _to, _tokenId, "");
     }
 
@@ -302,7 +286,7 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         tokenOwner[_tokenId] = _to;
 
         uint256 length = ownedTokens[_to].length;
-        
+
         require(length == uint32(length));
         ownedTokens[_to].push(uint8(_tokenId));
 
@@ -337,8 +321,7 @@ contract MyTokenBadgeFootStone is ERC721, ERC165 {
         supportedInterfaces[_interfaceId] = true;
     }
 
-    function () payable{
+    function () external payable{
         require(false);
     }
 }
-

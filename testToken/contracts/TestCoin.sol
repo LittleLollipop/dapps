@@ -127,8 +127,8 @@ contract WalletToken is StandardToken {
 //make sure this function name matches the contract name above. So if you're token is called TutorialToken, make sure the //contract name above is also TutorialToken instead of ERC20Token
 
     constructor() public {
-        balances[msg.sender] = 4*10**27;               // Give the creator all initial tokens
-        total = 4*10**27;   // Update total supply
+        balances[msg.sender] = 1*10**27;               // Give the creator all initial tokens
+        total = 1*10**27;   // Update total supply
         name = "Wallet Token";        // Set the name for display purposes
         decimals = 18;           // Amount of decimals for display purposes
         symbol = "WT";         // Set the symbol for display purposes
